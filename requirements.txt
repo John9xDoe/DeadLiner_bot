@@ -1,0 +1,14 @@
+SQLAlchemy==2.0.41
+python-dotenv==1.1.0
+psycopg2==2.9.10
+asyncpg==0.30.0
+tzlocal==5.3.1
+marshmallow==4.0.0
+APScheduler==3.11.0
+greenlet==3.2.3
+environs==14.1.1
+typing_extensions==4.14.0
+aiogram==3.20.0.post0
+environs==14.1.1
+frozenlist==1.6.0
+magic-filter==1.0.12
