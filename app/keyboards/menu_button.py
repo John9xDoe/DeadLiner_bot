@@ -14,6 +14,10 @@ def get_main_menu_commands(role: UserRole):
             BotCommand(
                 command='/help',
                 description='help_description'
+            ),
+            BotCommand(
+                command='/set_reminder',
+                description='set_reminder_description'
             )
         ]
     elif role == UserRole.ADMIN:

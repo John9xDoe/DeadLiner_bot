@@ -4,8 +4,8 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
 from datetime import datetime, timezone#, timedelta
 
-from database import async_session
-from models import Reminder
+from .database import async_session
+from .models import Reminder
 
 from sqlalchemy import select
 

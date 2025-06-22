@@ -1,9 +1,17 @@
 import logging
+from datetime import datetime
 
 from aiogram import Bot, Router
 from aiogram.enums import BotCommandScopeType
 from aiogram.filters import KICKED, ChatMemberUpdatedFilter, Command, CommandStart
 from aiogram.types import BotCommandScopeChat, ChatMemberUpdated, Message
+
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import default_state, State, StatesGroup
+
+from app.bot.FSM.set_reminder_states import (
+    process_set_reminder
+    )
 
 from app.bot.enums.roles import UserRole
 from app.bot.keyboards.menu_button import get_main_menu_commands
@@ -13,13 +21,9 @@ from database.db_users import (
     get_user
 )
 from database.db_reminders import (
-    add_reminder,
-    get_reminders
+    add_user_reminder,
+    get_user_reminders
 )
-
-from config.config import Config, load_config 
-
-config: Config = load_config()
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +33,7 @@ user_router = Router()
 async def process_start_command(
     message: Message,
     bot: Bot,
-    admin_ids: list[int] = config.bot.admin_ids
+    admin_ids: list[int]
 ):
     user_row = await get_user(user_id=message.from_user.id)
     if user_row is None:
@@ -67,9 +71,8 @@ async def process_help_command(message: Message):
     await message.answer(text='help_text')
     
 @user_router.message(Command(commands="set_reminder"))
-async def set_reminder():
-    pass
-    
+async def set_reminder(message: Message, state: FSMContext):
+    await process_set_reminder(message, state)
     
 @user_router.my_chat_member(ChatMemberUpdatedFilter(member_status_changed=KICKED))
 async def process_user_blocked_bot(event: ChatMemberUpdated):

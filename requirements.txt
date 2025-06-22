@@ -12,3 +12,5 @@ aiogram==3.20.0.post0
 environs==14.1.1
 frozenlist==1.6.0
 magic-filter==1.0.12
+redis==6.2.0
+

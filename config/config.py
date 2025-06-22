@@ -18,6 +18,14 @@ class DatabaseSettings:
     port: int
     user: str
     password: str
+    
+@dataclass
+class RedisSettings:
+    host: str
+    port: int
+    db: int
+    password: str
+    username: str
 
 @dataclass
 class LoggSettings: 
@@ -28,6 +36,7 @@ class LoggSettings:
 class Config:
     bot: BotSettings
     db: DatabaseSettings
+    redis: RedisSettings
     log: LoggSettings 
     
 def load_config(path: str | None = None) -> Config:
@@ -61,6 +70,14 @@ def load_config(path: str | None = None) -> Config:
         password=env("POSTGRES_PASSWORD")
     )
     
+    redis = RedisSettings(
+        host=env("REDIS_HOST"),
+        port=env.int("REDIS_PORT"),
+        db=env.int("REDIS_DATABASE"),
+        password=env("REDIS_PASSWORD", default=""),
+        username=env("REDIS_USERNAME", default="")
+    )
+    
     logg_settings = LoggSettings(
         level=env("LOG_LEVEL"),
         format=env("LOG_FORMAT")
@@ -69,6 +86,7 @@ def load_config(path: str | None = None) -> Config:
     return Config(
         bot=BotSettings(token=token, admin_ids=admin_ids),
         db=db,
+        redis=redis,
         log=logg_settings
     )
         
