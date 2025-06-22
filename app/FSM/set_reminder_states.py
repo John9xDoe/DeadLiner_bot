@@ -9,6 +9,8 @@ from database.db_reminders import (
     add_user_reminder
 )
 
+from filters.filters import IsValidDatetime
+
 from datetime import datetime
 
 class SetReminderStates(StatesGroup):
@@ -17,17 +19,30 @@ class SetReminderStates(StatesGroup):
     
 set_reminder_states_router = Router()
 
+@set_reminder_states_router.message(Command(commands='cancel'), StateFilter(default_state))
+async def process_cancel_command_in_ds(message: Message):
+    await message.answer('no_cancel')
+
+@set_reminder_states_router.message(Command(commands='cancel'), ~StateFilter(default_state))
+async def process_cancel_command_out_ds(message: Message, state: FSMContext):
+    await message.answer('command_is_canceled')
+    await state.clear()
+
 @set_reminder_states_router.message(StateFilter(default_state))
 async def process_set_reminder(message: Message, state: FSMContext):
     await message.answer("reminder_date: ")
     await state.set_state(SetReminderStates.waiting_for_date)
     
-@set_reminder_states_router.message(StateFilter(SetReminderStates.waiting_for_date))
+@set_reminder_states_router.message(StateFilter(SetReminderStates.waiting_for_date), IsValidDatetime())
 async def process_date(message: Message, state: FSMContext):
     await state.update_data(reminder_date=message.text)
     
     await message.answer("reminder_text: ")
     await state.set_state(SetReminderStates.waiting_for_text)
+    
+@set_reminder_states_router.message(StateFilter(SetReminderStates.waiting_for_date))
+async def process_wrong_date(message: Message, state: FSMContext):
+    await message.answer('incorrect_date')
     
 @set_reminder_states_router.message(StateFilter(SetReminderStates.waiting_for_text))
 async def process_text(message: Message, state: FSMContext):

@@ -1,8 +1,12 @@
+import asyncio
+
 from aiogram.filters import BaseFilter
 from aiogram.types import CallbackQuery, Message
 
 from app.enums.roles import UserRole
 from database.db_users import get_user_role
+
+from datetime import datetime 
 
 class UserRoleFilter(BaseFilter):
     def __init__(self, *roles: str | UserRole): 
@@ -30,3 +34,12 @@ class UserRoleFilter(BaseFilter):
             return False
         
         return role in self.roles
+    
+class IsValidDatetime(BaseFilter):
+    async def __call__(self, message: Message) -> bool:
+        try:
+            await asyncio.to_thread(datetime.strptime, message.text, '%Y-%m-%d %H:%M:%S')
+            return True
+        except ValueError:
+            return False
+    
