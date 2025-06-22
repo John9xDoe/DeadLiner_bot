@@ -2,7 +2,7 @@
 import logging
 from datetime import datetime, timezone
 
-from app.bot.enums.roles import UserRole
+from app.enums.roles import UserRole
 from .database import async_session
 from .models import User
 

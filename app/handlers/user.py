@@ -9,12 +9,12 @@ from aiogram.types import BotCommandScopeChat, ChatMemberUpdated, Message
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import default_state, State, StatesGroup
 
-from app.bot.FSM.set_reminder_states import (
+from app.FSM.set_reminder_states import (
     process_set_reminder
     )
 
-from app.bot.enums.roles import UserRole
-from app.bot.keyboards.menu_button import get_main_menu_commands
+from app.enums.roles import UserRole
+from app.keyboards.menu_button import get_main_menu_commands
 from database.db_users import (
     add_user, 
     change_user_alive_status, 

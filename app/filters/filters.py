@@ -1,7 +1,7 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import CallbackQuery, Message
 
-from app.bot.enums.roles import UserRole
+from app.enums.roles import UserRole
 from database.db_users import get_user_role
 
 class UserRoleFilter(BaseFilter):

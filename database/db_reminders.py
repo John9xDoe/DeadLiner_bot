@@ -1,4 +1,6 @@
 import asyncio
+from aiogram import Bot
+import functools
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.interval import IntervalTrigger
@@ -48,7 +50,7 @@ async def get_user_reminders(user_id: int):
         )
         return result.scalars().all()
 
-async def check_reminders():
+async def check_reminders(bot: Bot):
     async with async_session() as session:
         result = await session.execute(
             select(Reminder).where(Reminder.reminder_date <= datetime.now(timezone.utc), Reminder.is_sent == False)    
@@ -59,16 +61,17 @@ async def check_reminders():
             user_id = reminder.user_id
             reminder_text = reminder.reminder_text
             
-            # Обычное логирование -> прикрутить логику
+            # Обычное логирование -> прикрутить логику (send_test...)
+            await bot.send_message(user_id, reminder_text)
             logger.info(f"Sending reminder to user {user_id}: {reminder_text}")
             
             reminder.is_sent = True
             await session.commit()
 
-async def start_scheduler():
+async def start_scheduler(bot: Bot):
     
     scheduler.add_job(
-        check_reminders,
+        functools.partial(check_reminders, bot=bot),
         IntervalTrigger(minutes=1)
     )
     

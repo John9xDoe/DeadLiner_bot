@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
@@ -7,13 +8,15 @@ from aiogram.enums import ParseMode
 from aiogram.fsm.storage.redis import RedisStorage
 from redis.asyncio import Redis
 
-from app.bot.handlers.admin import admin_router
-from app.bot.handlers.user import user_router
-from app.bot.handlers.others import others_router
-from app.bot.FSM.set_reminder_states import set_reminder_states_router
+from app.handlers.admin import admin_router
+from app.handlers.user import user_router
+from app.handlers.others import others_router
+from app.FSM.set_reminder_states import set_reminder_states_router
 
 from config.config import Config
 from database.create_tables import init_models  
+
+from database.db_reminders import start_scheduler
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +41,11 @@ async def main(config: Config) -> None:
     dp = Dispatcher(storage=storage) # (bot=bot)
     
     await init_models() 
+    
+    #scheduler_task = 
+    await start_scheduler(bot=bot)
+    
+    #await scheduler_task
     
     logger.info("Including routers...")
     dp.include_routers(

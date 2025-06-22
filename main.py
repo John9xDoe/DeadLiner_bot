@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 
-from app.bot import main
+from app import main
 from config.config import Config, load_config
 
 config: Config = load_config()
@@ -13,4 +13,5 @@ logging.basicConfig(
     format=config.log.format
 )
 
-asyncio.run(main(config))
+if __name__ == '__main__':
+    asyncio.run(main(config))

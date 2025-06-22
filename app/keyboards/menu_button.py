@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 from aiogram.types import BotCommand 
-from app.bot.enums.roles import UserRole
+from app.enums.roles import UserRole
 
 def get_main_menu_commands(role: UserRole):
     if role == UserRole.USER:

@@ -7,8 +7,8 @@ from aiogram import Router
 from aiogram.filters import Command, CommandObject
 from aiogram.types import Message
 
-from app.bot.enums.roles import UserRole
-from app.bot.filters.filters import UserRoleFilter
+from app.enums.roles import UserRole
+from app.filters.filters import UserRoleFilter
 from database.db_users import change_user_banned_status, get_user_banned_status
 
 logger = logging.getLogger(__name__)
